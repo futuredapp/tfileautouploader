@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -22,7 +23,7 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 	/**
 	 * Create singleton instance of this with preferred type
 	 */
-	public FileUploadManager(Context context) {
+	public FileUploadManager(@NonNull Context context) {
 		this.context = context.getApplicationContext();
 		this.handler = new Handler(context.getMainLooper());
 
@@ -43,11 +44,9 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 		this.images.addAll(distinctImages);
 		this.adapterContract.addAll(distinctImages);
 
-		if (context != null) {
-			for (FileHolder<T> image : distinctImages) {
-				Intent intent = getServiceIntent(image);
-				context.startService(intent);
-			}
+		for (FileHolder<T> image : distinctImages) {
+			Intent intent = getServiceIntent(image);
+			context.startService(intent);
 		}
 	}
 
