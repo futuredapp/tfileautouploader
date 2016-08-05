@@ -57,4 +57,9 @@ public abstract class BaseFileUploadService extends IntentService {
 		notificationBuilder.setProgress(100, percentage, false);
 		manager.notify(NOTIFICATION_ID, notificationBuilder.build());
 	}
+
+	public void decreaseFileCount() {
+		fileCount--;
+		currentFile--;
+	}
 }

@@ -47,6 +47,7 @@ public class MyUploadService extends BaseFileUploadService {
 
 		// image removed - do not upload
 		if (image == null) {
+			decreaseFileCount();
 			return;
 		}
 
