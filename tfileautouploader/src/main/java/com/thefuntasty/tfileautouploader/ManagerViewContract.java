@@ -10,7 +10,7 @@ interface ManagerViewContract<T> extends BaseManagerContract<T> {
 
 	void removeItem(FileHolder<T> file);
 
-	void updateItem(FileHolder<T> file);
+	void updateItem(FileHolder<T> file, @ItemUpdate.UpdateType int updateType);
 
 	void retryItem(FileHolder<T> file);
 

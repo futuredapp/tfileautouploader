@@ -86,7 +86,7 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 
 				handler.post(new Runnable() {
 					@Override public void run() {
-						adapterContract.updateItem(image);
+						adapterContract.updateItem(image, ItemUpdate.STATUS);
 					}
 				});
 
@@ -117,7 +117,7 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 		onUploadFinishedListener = null;
 	}
 
-	@Override public void updateItem(final FileHolder<T> image) {
+	@Override public void updateItem(final FileHolder<T> image, @ItemUpdate.UpdateType final int updateType) {
 		int indexOf = images.indexOf(image);
 
 		if (indexOf != -1) {
@@ -128,7 +128,7 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 
 			handler.post(new Runnable() {
 				@Override public void run() {
-					adapterContract.updateItem(image);
+					adapterContract.updateItem(image, updateType);
 				}
 			});
 

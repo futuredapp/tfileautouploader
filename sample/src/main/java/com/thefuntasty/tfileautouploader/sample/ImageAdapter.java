@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import com.thefuntasty.tfileautouploader.AdapterContract;
 import com.thefuntasty.tfileautouploader.FileHolder;
+import com.thefuntasty.tfileautouploader.ItemUpdate;
 import com.thefuntasty.tfileautouploader.Status;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
 	@Override
 	@UiThread
-	public void updateItem(FileHolder<Photo> image) {
+	public void updateItem(FileHolder<Photo> image, @ItemUpdate.UpdateType int updateType) {
 		int index = images.indexOf(image);
 		images.set(index, image);
 		notifyItemChanged(index, payload);

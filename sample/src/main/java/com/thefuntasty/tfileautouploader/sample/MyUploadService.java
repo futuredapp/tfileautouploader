@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import com.thefuntasty.tfileautouploader.BaseFileUploadService;
 import com.thefuntasty.tfileautouploader.FileHolder;
 import com.thefuntasty.tfileautouploader.FileUploadManager;
+import com.thefuntasty.tfileautouploader.ItemUpdate;
 import com.thefuntasty.tfileautouploader.Status;
 
 import java.util.concurrent.TimeUnit;
@@ -51,32 +52,6 @@ public class MyUploadService extends BaseFileUploadService {
 
 		image.status.statusType = Status.UPLOADING;
 
-		/*BlockingObservable<Result<Photo>> observable = Api.get().uploadFile(new ProgressRequestBody(new File(uri.getPath()), MediaType.parse("image/jpeg"), new ProgressRequestBody.UploadCallbacks() {
-			@Override public void onProgressUpdate(int percentage) {
-				showNotificationProgress(percentage);
-				image.status.progress = percentage;
-				uploadManager.updateItem(image);
-			}
-		})).toBlocking();
-
-		observable.subscribe(new Action1<Result<Photo>>() {
-			@Override public void call(Result<Photo> result) {
-				if (!result.isError() && result.response().isSuccessful()) {
-					Photo body = result.response().body();
-					image.status.statusType = Status.UPLOADED;
-					image.result = body;
-				} else {
-					image.status.statusType = Status.FAILED;
-				}
-				uploadManager.updateItem(image);
-			}
-		}, new Action1<Throwable>() {
-			@Override public void call(Throwable throwable) {
-				image.status.statusType = Status.FAILED;
-				uploadManager.updateItem(image);
-			}
-		});*/
-
 		Observable.interval(50, TimeUnit.MILLISECONDS)
 				.take(101)
 				.filter(new Func1<Long, Boolean>() {
@@ -91,7 +66,7 @@ public class MyUploadService extends BaseFileUploadService {
 					@Override public void onNext(Long aLong) {
 						if (image.status.statusType != Status.REMOVED) {
 							image.status.progress = aLong.intValue();
-							uploadManager.updateItem(image);
+							uploadManager.updateItem(image, ItemUpdate.PROGRESS);
 							showNotificationProgress(aLong.intValue());
 						} else {
 							unsubscribe();
@@ -107,7 +82,7 @@ public class MyUploadService extends BaseFileUploadService {
 					@Override public void onNext(String s) {
 						if (image.status.statusType != Status.REMOVED) {
 							image.status.statusType = Status.UPLOADED;
-							uploadManager.updateItem(image);
+							uploadManager.updateItem(image, ItemUpdate.STATUS);
 						} else {
 							unsubscribe();
 						}
