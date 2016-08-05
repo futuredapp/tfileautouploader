@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 		recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
 		uploadManager = MyUploadManager.get();
-		final com.thefuntasty.tfileautouploader.sample.ImageAdapter adapter = new ImageAdapter(this, uploadManager.getImages(), new View.OnClickListener() {
+		final ImageAdapter adapter = new ImageAdapter(this, uploadManager.getImages(), new View.OnClickListener() {
 			@Override public void onClick(View view) {
 				int pos = recycler.getChildLayoutPosition(view);
 				FileHolder<Photo> item = uploadManager.getItem(pos);
