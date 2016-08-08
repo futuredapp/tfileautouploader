@@ -38,14 +38,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 	int imageSize;
 	RecyclerView attachedRecycler;
 
-	public ImageAdapter(Context context, ArrayList<FileHolder<Photo>> initialValues, View.OnClickListener listener) {
+	public ImageAdapter(Context context, View.OnClickListener listener) {
 		this.context = context;
 		this.listener = listener;
 		this.payload = new Object();
 		this.images = new ArrayList<>();
 		this.imageSize = Math.round(convertDpToPixel(150, context));
 
-		this.images.addAll(initialValues);
 		notifyDataSetChanged();
 	}
 
