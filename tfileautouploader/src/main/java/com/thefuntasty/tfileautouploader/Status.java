@@ -18,4 +18,11 @@ public class Status {
 
 	public int progress = 0;
 	public @UploadStatus int statusType = IDLE;
+
+	public Status() { }
+
+	public Status(int statusType, int progress) {
+		this.statusType = statusType;
+		this.progress = progress;
+	}
 }

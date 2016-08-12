@@ -34,7 +34,7 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 		// Remove duplicate values
 		ArrayList<FileHolder<T>> distinctImages = new ArrayList<>();
 		for (FileHolder<T> image : images) {
-			if (!this.images.contains(image)) {
+			if (!distinctImages.contains(image)) {
 				distinctImages.add(image);
 			} else {
 				Log.w(TAG, "Does not support duplicate images!");
@@ -45,6 +45,10 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 		this.adapterContract.addAll(distinctImages);
 
 		for (FileHolder<T> image : distinctImages) {
+			if (image.status.statusType == Status.UPLOADED) {
+				continue;
+			}
+
 			Intent intent = getServiceIntent(image);
 			context.startService(intent);
 		}
@@ -115,6 +119,9 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 
 	@Override public void reset() {
 		onUploadFinishedListener = null;
+		adapterContract = null;
+
+		images.clear();
 	}
 
 	@Override public void updateItem(final FileHolder<T> image, @ItemUpdate.UpdateType final int updateType) {
