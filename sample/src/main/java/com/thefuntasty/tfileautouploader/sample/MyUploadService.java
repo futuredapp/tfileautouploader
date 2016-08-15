@@ -2,6 +2,7 @@ package com.thefuntasty.tfileautouploader.sample;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -41,7 +42,7 @@ public class MyUploadService extends BaseFileUploadService {
 		builder.setContentText("Uploading photos: " + currentPhoto + "/" + photoCount);
 	}
 
-	@Override protected void uploadFileAndSave(Uri uri) {
+	@Override protected void uploadFileAndSave(Uri uri, Bundle config) {
 		final FileUploadManager<Photo> uploadManager = com.thefuntasty.tfileautouploader.sample.MyUploadManager.get();
 		final FileHolder<Photo> image = uploadManager.getImage(uri);
 
@@ -94,6 +95,7 @@ public class MyUploadService extends BaseFileUploadService {
 	public static Intent getStarterIntent(FileHolder<Photo> image) {
 		Intent intent = new Intent(com.thefuntasty.tfileautouploader.sample.App.context(), MyUploadService.class);
 		intent.putExtra("uri", image.path);
+		intent.putExtra("config", image.config);
 		return intent;
 	}
 }
