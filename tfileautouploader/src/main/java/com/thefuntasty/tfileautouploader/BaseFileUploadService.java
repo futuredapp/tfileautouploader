@@ -64,4 +64,11 @@ public abstract class BaseFileUploadService extends IntentService {
 		fileCount--;
 		currentFile--;
 	}
+
+	public static Intent getStarterIntent(Context context, FileHolder<?> image, Class<? extends BaseFileUploadService> serviceClass) {
+		Intent intent = new Intent(context, serviceClass);
+		intent.putExtra("uri", image.path);
+		intent.putExtra("config", image.config);
+		return intent;
+	}
 }

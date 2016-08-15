@@ -11,7 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FileUploadManager<T> implements ManagerServiceContract<T>, ManagerViewContract<T> {
+public class FileUploadManager<T> implements ManagerServiceContract<T>, ManagerViewContract<T> {
 	private static final String TAG = FileUploadManager.class.getSimpleName();
 
 	private ArrayList<FileHolder<T>> images;
@@ -19,13 +19,15 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 	private Context context;
 	private AdapterContract<T> adapterContract;
 	private Handler handler;
+	private Class<? extends BaseFileUploadService> serviceClass;
 
 	/**
 	 * Create singleton instance of this with preferred type
 	 */
-	public FileUploadManager(@NonNull Context context) {
+	public FileUploadManager(@NonNull Context context, Class<? extends BaseFileUploadService> serviceClass) {
 		this.context = context.getApplicationContext();
 		this.handler = new Handler(context.getMainLooper());
+		this.serviceClass = serviceClass;
 
 		images = new ArrayList<>();
 	}
@@ -53,8 +55,6 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 			context.startService(intent);
 		}
 	}
-
-	public abstract Intent getServiceIntent(FileHolder<T> image);
 
 	public void setAdapterContract(AdapterContract<T> adapterContract) {
 		this.adapterContract = adapterContract;
@@ -170,5 +170,9 @@ public abstract class FileUploadManager<T> implements ManagerServiceContract<T>,
 			Log.w(TAG, "Try to getItem() at invalid position: " + position + ", content size: " + images.size());
 			return null;
 		}
+	}
+
+	private Intent getServiceIntent(FileHolder<T> image) {
+		return BaseFileUploadService.getStarterIntent(context, image, serviceClass);
 	}
 }

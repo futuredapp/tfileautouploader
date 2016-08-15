@@ -91,11 +91,4 @@ public class MyUploadService extends BaseFileUploadService {
 					}
 				});
 	}
-
-	public static Intent getStarterIntent(FileHolder<Photo> image) {
-		Intent intent = new Intent(com.thefuntasty.tfileautouploader.sample.App.context(), MyUploadService.class);
-		intent.putExtra("uri", image.path);
-		intent.putExtra("config", image.config);
-		return intent;
-	}
 }
