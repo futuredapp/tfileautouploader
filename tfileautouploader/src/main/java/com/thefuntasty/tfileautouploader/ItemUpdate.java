@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 
 public class ItemUpdate {
 	public static final int STATUS = 0;
-	public static final int PROGRESS = 0;
+	public static final int PROGRESS = 1;
 
 	@Retention(RetentionPolicy.SOURCE)
 	@IntDef({STATUS, PROGRESS})
