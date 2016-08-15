@@ -37,7 +37,7 @@ public abstract class BaseFileUploadService extends IntentService {
 
 	@Override protected final void onHandleIntent(Intent intent) {
 		Uri path = intent.getParcelableExtra("uri");
-		Bundle extras = intent.getBundleExtra("config");
+		Bundle config = intent.getBundleExtra("config");
 
 		currentFile++;
 		updateNotification(notificationBuilder, fileCount, currentFile);
@@ -46,7 +46,7 @@ public abstract class BaseFileUploadService extends IntentService {
 
 		notificationBuilder.setProgress(100, 0, false);
 		manager.notify(NOTIFICATION_ID, notificationBuilder.build());
-		uploadFileAndSave(path, extras);
+		uploadFileAndSave(path, config);
 	}
 
 	protected abstract void uploadFileAndSave(Uri path, Bundle config);
