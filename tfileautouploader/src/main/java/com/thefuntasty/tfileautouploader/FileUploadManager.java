@@ -32,12 +32,12 @@ public class FileUploadManager<T> implements ManagerServiceContract<T>, ManagerV
 		images = new ArrayList<>();
 	}
 
-	@Override public void addAll(List<FileHolder<T>> images) {
+	@Override public void addAll(List<FileHolder<T>> newImages) {
 		// Remove duplicate values
 		ArrayList<FileHolder<T>> distinctImages = new ArrayList<>();
-		for (FileHolder<T> image : images) {
-			if (!distinctImages.contains(image)) {
-				distinctImages.add(image);
+		for (FileHolder<T> newImage : newImages) {
+			if (!this.images.contains(newImage)) {
+				distinctImages.add(newImage);
 			} else {
 				Log.w(TAG, "Does not support duplicate images!");
 			}
