@@ -1,9 +1,9 @@
 package com.thefuntasty.tfileautouploader.sample;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
@@ -19,7 +19,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class MyUploadService extends BaseFileUploadService {
+public class MyUploadService extends BaseFileUploadService<Photo> {
 
 	public MyUploadService() {
 		super("MyUploadService");
@@ -42,16 +42,11 @@ public class MyUploadService extends BaseFileUploadService {
 		builder.setContentText("Uploading photos: " + currentPhoto + "/" + photoCount);
 	}
 
-	@Override protected void uploadFileAndSave(Uri uri, Bundle config) {
-		final FileUploadManager<Photo> uploadManager = MyUploadManager.get();
-		final FileHolder<Photo> image = uploadManager.getItem(uri);
+	@Override public FileUploadManager<Photo> getUploadManager() {
+		return MyUploadManager.get();
+	}
 
-		// image removed - do not upload
-		if (image == null) {
-			decreaseFileCount();
-			return;
-		}
-
+	@Override protected void uploadFileAndSave(@NonNull final FileHolder<Photo> image, Bundle config) {
 		image.status.statusType = Status.UPLOADING;
 
 		Observable.interval(50, TimeUnit.MILLISECONDS)
@@ -68,7 +63,7 @@ public class MyUploadService extends BaseFileUploadService {
 					@Override public void onNext(Long aLong) {
 						if (image.status.statusType != Status.REMOVED) {
 							image.status.progress = aLong.intValue();
-							uploadManager.updateItem(image, ItemUpdate.PROGRESS);
+							updateItem(image, ItemUpdate.PROGRESS);
 							showNotificationProgress(aLong.intValue());
 						} else {
 							unsubscribe();
@@ -84,7 +79,7 @@ public class MyUploadService extends BaseFileUploadService {
 					@Override public void onNext(String s) {
 						if (image.status.statusType != Status.REMOVED) {
 							image.status.statusType = Status.UPLOADED;
-							uploadManager.updateItem(image, ItemUpdate.STATUS);
+							updateItem(image, ItemUpdate.STATUS);
 						} else {
 							unsubscribe();
 						}

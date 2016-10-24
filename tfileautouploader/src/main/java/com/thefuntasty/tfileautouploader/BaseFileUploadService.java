@@ -6,9 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
-public abstract class BaseFileUploadService extends IntentService {
+public abstract class BaseFileUploadService<T> extends IntentService {
 
 	private NotificationManager manager;
 	private static final int NOTIFICATION_ID = 1111;
@@ -46,21 +47,34 @@ public abstract class BaseFileUploadService extends IntentService {
 
 		notificationBuilder.setProgress(100, 0, false);
 		manager.notify(NOTIFICATION_ID, notificationBuilder.build());
-		uploadFileAndSave(path, config);
+
+		FileHolder<T> file = getUploadManager().getItem(path);
+
+		if (file != null) { // file not removed
+			uploadFileAndSave(file, config);
+		} else {
+			decreaseFileCount();
+		}
 	}
 
-	protected abstract void uploadFileAndSave(Uri path, Bundle config);
+	protected abstract void uploadFileAndSave(@NonNull final FileHolder<T> file, Bundle config);
 
 	public abstract NotificationCompat.Builder createNotification();
 
 	public abstract void updateNotification(NotificationCompat.Builder builder, int fileCount, int currentFile);
+
+	public abstract FileUploadManager<T> getUploadManager();
+
+	public final void updateItem(FileHolder<T> file, @ItemUpdate.UpdateType int updateType) {
+		getUploadManager().updateItem(file, updateType);
+	}
 
 	public void showNotificationProgress(int percentage) {
 		notificationBuilder.setProgress(100, percentage, false);
 		manager.notify(NOTIFICATION_ID, notificationBuilder.build());
 	}
 
-	public void decreaseFileCount() {
+	private void decreaseFileCount() {
 		fileCount--;
 		currentFile--;
 	}
