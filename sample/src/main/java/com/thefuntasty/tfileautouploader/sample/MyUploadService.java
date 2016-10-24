@@ -43,8 +43,8 @@ public class MyUploadService extends BaseFileUploadService {
 	}
 
 	@Override protected void uploadFileAndSave(Uri uri, Bundle config) {
-		final FileUploadManager<Photo> uploadManager = com.thefuntasty.tfileautouploader.sample.MyUploadManager.get();
-		final FileHolder<Photo> image = uploadManager.getImage(uri);
+		final FileUploadManager<Photo> uploadManager = MyUploadManager.get();
+		final FileHolder<Photo> image = uploadManager.getItem(uri);
 
 		// image removed - do not upload
 		if (image == null) {

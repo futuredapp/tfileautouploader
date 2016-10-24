@@ -148,11 +148,11 @@ public class FileUploadManager<T> implements ManagerServiceContract<T>, ManagerV
 		}
 	}
 
-	@Override public ArrayList<FileHolder<T>> getImages() {
+	@Override public ArrayList<FileHolder<T>> getItems() {
 		return images;
 	}
 
-	@Override public FileHolder<T> getImage(Uri path) {
+	@Override public FileHolder<T> getItem(Uri path) {
 		for (FileHolder<T> image : images) {
 			if (image.path.equals(path)) {
 				return image;
