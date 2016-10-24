@@ -86,7 +86,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 	@Override public void retryItem(final FileHolder<T> image) {
 		for (FileHolder<T> img : images) {
 			if (img.equals(image)) {
-				img.status.statusType = Status.IDLE;
+				img.status.statusType = Status.WAITING;
 
 				handler.post(new Runnable() {
 					@Override public void run() {

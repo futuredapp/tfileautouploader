@@ -145,7 +145,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 			case Status.FAILED:
 				return Color.RED;
 			default:
-			case Status.IDLE:
+			case Status.WAITING:
 				return Color.YELLOW;
 			case Status.REMOVED:
 				return Color.BLACK;
