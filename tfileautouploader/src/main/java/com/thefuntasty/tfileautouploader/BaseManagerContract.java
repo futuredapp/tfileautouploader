@@ -6,7 +6,7 @@ import java.util.List;
 
 interface BaseManagerContract<T> {
 
-	List<FileHolder<T>> getItems();
+	List<ItemHolder<T>> getItems();
 
-	FileHolder<T> getItem(Uri path);
+	ItemHolder<T> getItem(Uri path);
 }

@@ -48,7 +48,7 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 		notificationBuilder.setProgress(100, 0, false);
 		manager.notify(NOTIFICATION_ID, notificationBuilder.build());
 
-		FileHolder<T> file = getUploadManager().getItem(path);
+		ItemHolder<T> file = getUploadManager().getItem(path);
 
 		if (file != null) { // file not removed
 			file.status.statusType = Status.UPLOADING;
@@ -58,7 +58,7 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 		}
 	}
 
-	protected abstract void uploadFileAndSave(@NonNull final FileHolder<T> file, Bundle config);
+	protected abstract void uploadFileAndSave(@NonNull final ItemHolder<T> file, Bundle config);
 
 	public abstract NotificationCompat.Builder createNotification();
 
@@ -66,15 +66,15 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 
 	public abstract FileUploadManager<T> getUploadManager();
 
-	public final void updateItemProgress(FileHolder<T> file, int progress) {
+	public final void updateItemProgress(ItemHolder<T> file, int progress) {
 		getUploadManager().updateItemProgress(file, progress);
 	}
 
-	public final void updateItemStatus(FileHolder<T> file, @Status.UploadStatus int newStatus) {
+	public final void updateItemStatus(ItemHolder<T> file, @Status.UploadStatus int newStatus) {
 		getUploadManager().updateItemStatus(file, newStatus);
 	}
 
-	public final void updateItemResult(FileHolder<T> file, T result) {
+	public final void updateItemResult(ItemHolder<T> file, T result) {
 		file.result = result;
 	}
 
@@ -88,7 +88,7 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 		currentFile--;
 	}
 
-	public static Intent getStarterIntent(Context context, FileHolder<?> image, Class<? extends BaseFileUploadService> serviceClass) {
+	public static Intent getStarterIntent(Context context, ItemHolder<?> image, Class<? extends BaseFileUploadService> serviceClass) {
 		Intent intent = new Intent(context, serviceClass);
 		intent.putExtra("uri", image.path);
 		intent.putExtra("config", image.config);

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class FileUploadManager<T> implements ManagerViewContract<T> {
 	private static final String TAG = FileUploadManager.class.getSimpleName();
 
-	private ArrayList<FileHolder<T>> images;
+	private ArrayList<ItemHolder<T>> images;
 	private OnUploadFinishedListener onUploadFinishedListener;
 	private Context context;
 	private AdapterContract<T> adapterContract;
@@ -43,7 +43,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 	@Override public void addItem(AddUploadedItemRequest request) {
 		if (itemAlreadyAdded(request.getUri())) return;
 
-		FileHolder<T> holder = new FileHolder<>(request.getUri(), Status.create(Status.UPLOADED));
+		ItemHolder<T> holder = new ItemHolder<>(request.getUri(), Status.create(Status.UPLOADED));
 		this.images.add(holder);
 		this.adapterContract.itemAdded(holder);
 	}
@@ -51,7 +51,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 	@Override public void addItem(AddItemToUploadRequest request) {
 		if (itemAlreadyAdded(request.getUri())) return;
 
-		FileHolder<T> holder = new FileHolder<>(request.getUri(), Status.create(Status.WAITING), null, request.getConfig());
+		ItemHolder<T> holder = new ItemHolder<>(request.getUri(), Status.create(Status.WAITING), null, request.getConfig());
 		this.images.add(holder);
 		this.adapterContract.itemAdded(holder);
 
@@ -69,8 +69,8 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		}
 	}
 
-	@Override public void removeItem(final FileHolder<T> image) {
-		for (FileHolder<T> img : images) {
+	@Override public void removeItem(final ItemHolder<T> image) {
+		for (ItemHolder<T> img : images) {
 			if (img.equals(image)) {
 				img.status.statusType = Status.REMOVED;
 
@@ -92,8 +92,8 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		Log.w(TAG, "Try to call removeItem() with unavailable item!");
 	}
 
-	@Override public void retryItem(final FileHolder<T> image) {
-		for (FileHolder<T> img : images) {
+	@Override public void retryItem(final ItemHolder<T> image) {
+		for (ItemHolder<T> img : images) {
 			if (img.equals(image)) {
 				img.status.statusType = Status.WAITING;
 
@@ -114,7 +114,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 	}
 
 	@Override public boolean isEverythingUploaded() {
-		for (FileHolder<T> img : images) {
+		for (ItemHolder<T> img : images) {
 			if (img.status.statusType != Status.UPLOADED) {
 				return false;
 			}
@@ -133,15 +133,15 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		images.clear();
 	}
 
-	void updateItemProgress(final FileHolder<T> file, int value) {
+	void updateItemProgress(final ItemHolder<T> file, int value) {
 		int indexOf = images.indexOf(file);
 
 		if (indexOf != -1) {
-			FileHolder<T> fileHolder = images.get(indexOf);
-			fileHolder.status = file.status;
-			fileHolder.status.progress = value;
-			fileHolder.path = file.path;
-			fileHolder.result = file.result;
+			ItemHolder<T> itemHolder = images.get(indexOf);
+			itemHolder.status = file.status;
+			itemHolder.status.progress = value;
+			itemHolder.path = file.path;
+			itemHolder.result = file.result;
 
 			handler.post(new Runnable() {
 				@Override public void run() {
@@ -153,14 +153,14 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		}
 	}
 
-	void updateItemStatus(final FileHolder<T> file, @Status.UploadStatus int newStatus) {
+	void updateItemStatus(final ItemHolder<T> file, @Status.UploadStatus int newStatus) {
 		int indexOf = images.indexOf(file);
 
 		if (indexOf != -1) {
-			FileHolder<T> fileHolder = images.get(indexOf);
-			fileHolder.status.statusType = newStatus;
-			fileHolder.path = file.path;
-			fileHolder.result = file.result;
+			ItemHolder<T> itemHolder = images.get(indexOf);
+			itemHolder.status.statusType = newStatus;
+			itemHolder.path = file.path;
+			itemHolder.result = file.result;
 
 			handler.post(new Runnable() {
 				@Override public void run() {
@@ -168,7 +168,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 				}
 			});
 
-			if (onUploadFinishedListener != null && isEverythingUploaded() && fileHolder.status.statusType == Status.UPLOADED) {
+			if (onUploadFinishedListener != null && isEverythingUploaded() && itemHolder.status.statusType == Status.UPLOADED) {
 				onUploadFinishedListener.onUploadFinished();
 			}
 
@@ -177,12 +177,12 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		}
 	}
 
-	@Override public ArrayList<FileHolder<T>> getItems() {
+	@Override public ArrayList<ItemHolder<T>> getItems() {
 		return images;
 	}
 
-	@Override public FileHolder<T> getItem(Uri path) {
-		for (FileHolder<T> image : images) {
+	@Override public ItemHolder<T> getItem(Uri path) {
+		for (ItemHolder<T> image : images) {
 			if (image.path.equals(path)) {
 				return image;
 			}
@@ -192,7 +192,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 	}
 
 
-	public FileHolder<T> getItem(int position) {
+	public ItemHolder<T> getItem(int position) {
 		if (position < images.size()) {
 			return images.get(position);
 		} else {
@@ -202,7 +202,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 	}
 
 	private boolean itemAlreadyAdded(Uri uri) {
-		for (FileHolder<T> image : images) {
+		for (ItemHolder<T> image : images) {
 			if (image.getPath().equals(uri)) {
 				Log.w(TAG, "Does not support duplicate images!");
 				return true;
@@ -211,7 +211,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		return false;
 	}
 
-	private Intent getServiceIntent(FileHolder<T> image) {
+	private Intent getServiceIntent(ItemHolder<T> image) {
 		return BaseFileUploadService.getStarterIntent(context, image, serviceClass);
 	}
 }

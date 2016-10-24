@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import com.thefuntasty.tfileautouploader.FileHolder;
 import com.thefuntasty.tfileautouploader.FileUploadManager;
+import com.thefuntasty.tfileautouploader.ItemHolder;
 import com.thefuntasty.tfileautouploader.OnUploadFinishedListener;
 import com.thefuntasty.tfileautouploader.request.AddItemToUploadRequest;
 import com.thefuntasty.tfileautouploader.request.AddItemsRequest;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 		final ImageAdapter adapter = new ImageAdapter(this, new View.OnClickListener() {
 			@Override public void onClick(View view) {
 				int pos = recycler.getChildLayoutPosition(view);
-				FileHolder<Photo> item = uploadManager.getItem(pos);
+				ItemHolder<Photo> item = uploadManager.getItem(pos);
 					uploadManager.removeItem(item);
 			}
 		});

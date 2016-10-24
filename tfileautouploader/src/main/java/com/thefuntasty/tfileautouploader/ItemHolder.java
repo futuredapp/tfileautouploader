@@ -5,21 +5,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public class FileHolder<T> {
+public class ItemHolder<T> {
 	@NonNull Uri path;
 	@NonNull Status status;
 	@Nullable T result;
 	@Nullable Bundle config;
 
-	public FileHolder(@NonNull Uri path, @NonNull Status status) {
+	public ItemHolder(@NonNull Uri path, @NonNull Status status) {
 		this(path, status, null, null);
 	}
 
-	public FileHolder(@NonNull Uri path, @NonNull Status status, @Nullable T result) {
+	public ItemHolder(@NonNull Uri path, @NonNull Status status, @Nullable T result) {
 		this(path, status, result, null);
 	}
 
-	public FileHolder(@NonNull Uri path, @NonNull Status status, @Nullable T result, @Nullable Bundle config) {
+	public ItemHolder(@NonNull Uri path, @NonNull Status status, @Nullable T result, @Nullable Bundle config) {
 		this.path = path;
 		this.status = status;
 		this.result = result;
@@ -30,7 +30,7 @@ public class FileHolder<T> {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		FileHolder<?> that = (FileHolder<?>) o;
+		ItemHolder<?> that = (ItemHolder<?>) o;
 
 		return path.toString().equals(that.path.toString());
 	}

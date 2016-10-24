@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.thefuntasty.tfileautouploader.BaseFileUploadService;
-import com.thefuntasty.tfileautouploader.FileHolder;
 import com.thefuntasty.tfileautouploader.FileUploadManager;
+import com.thefuntasty.tfileautouploader.ItemHolder;
 import com.thefuntasty.tfileautouploader.Status;
 
 import java.util.concurrent.TimeUnit;
@@ -45,7 +45,7 @@ public class MyUploadService extends BaseFileUploadService<Photo> {
 		return MyUploadManager.get();
 	}
 
-	@Override protected void uploadFileAndSave(@NonNull final FileHolder<Photo> image, Bundle config) {
+	@Override protected void uploadFileAndSave(@NonNull final ItemHolder<Photo> image, Bundle config) {
 		Observable.interval(50, TimeUnit.MILLISECONDS)
 				.take(101)
 				.filter(new Func1<Long, Boolean>() {

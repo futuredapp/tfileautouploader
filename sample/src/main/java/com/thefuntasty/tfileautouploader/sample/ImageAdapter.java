@@ -19,7 +19,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import com.thefuntasty.tfileautouploader.AdapterContract;
-import com.thefuntasty.tfileautouploader.FileHolder;
+import com.thefuntasty.tfileautouploader.ItemHolder;
 import com.thefuntasty.tfileautouploader.Status;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> implements AdapterContract<Photo> {
 
-	private ArrayList<FileHolder<Photo>> images;
+	private ArrayList<ItemHolder<Photo>> images;
 	private Context context;
 	private final View.OnClickListener listener;
 	private Object payload;
@@ -62,7 +62,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 	}
 
 	@Override public void onBindViewHolder(ViewHolder holder, int position) {
-		FileHolder<Photo> fileHolder = images.get(position);
+		ItemHolder<Photo> fileHolder = images.get(position);
 		ImageRequest request = ImageRequestBuilder.newBuilderWithSource(fileHolder.getPath())
 				.setResizeOptions(new ResizeOptions(imageSize, imageSize))
 				.build();
@@ -87,32 +87,32 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 			return;
 		}
 
-		FileHolder<Photo> fileHolder = images.get(position);
-		holder.uploadIndicator.setBackgroundColor(getColorForStatus(fileHolder.getStatus()));
-		holder.progressBar.setProgress(fileHolder.getProgress());
+		ItemHolder<Photo> itemHolder = images.get(position);
+		holder.uploadIndicator.setBackgroundColor(getColorForStatus(itemHolder.getStatus()));
+		holder.progressBar.setProgress(itemHolder.getProgress());
 	}
 
 	@Override public int getItemCount() {
 		return images.size();
 	}
 
-	private void refreshItem(FileHolder<Photo> image) {
+	private void refreshItem(ItemHolder<Photo> image) {
 		int index = images.indexOf(image);
 		images.set(index, image);
 		notifyItemChanged(index, payload);
 	}
 
-	private void removeItem(FileHolder<Photo> image) {
+	private void removeItem(ItemHolder<Photo> image) {
 		int index = images.indexOf(image);
 		images.remove(index);
 		notifyItemRemoved(index);
 	}
 
-	@Override public void itemUploadProgressUpdate(FileHolder<Photo> file) {
+	@Override public void itemUploadProgressUpdate(ItemHolder<Photo> file) {
 		refreshItem(file);
 	}
 
-	@Override public void itemStatusUpdate(FileHolder<Photo> file) {
+	@Override public void itemStatusUpdate(ItemHolder<Photo> file) {
 		if (file.getStatus() == Status.REMOVED) {
 			removeItem(file);
 		} else {
@@ -122,7 +122,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
 	@Override
 	@UiThread
-	public void itemsAdded(List<FileHolder<Photo>> images) {
+	public void itemsAdded(List<ItemHolder<Photo>> images) {
 		int startPosition = this.images.size();
 		this.images.addAll(images);
 		notifyItemRangeInserted(startPosition, images.size());
@@ -130,7 +130,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
 	@Override
 	@UiThread
-	public void itemAdded(FileHolder<Photo> file) {
+	public void itemAdded(ItemHolder<Photo> file) {
 		this.images.add(file);
 		notifyItemInserted(images.size() - 1);
 	}
