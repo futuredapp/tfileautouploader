@@ -4,8 +4,7 @@ import com.thefuntasty.tfileautouploader.FileUploadManager;
 
 public class MyUploadManager {
 
-	public static FileUploadManager<Photo> manager;
-
+	private static FileUploadManager<Photo> manager;
 
 	public static FileUploadManager<Photo> get() {
 		if (manager == null) {

@@ -31,12 +31,12 @@ import butterknife.ButterKnife;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> implements AdapterContract<Photo> {
 
-	ArrayList<FileHolder<Photo>> images;
-	Context context;
+	private ArrayList<FileHolder<Photo>> images;
+	private Context context;
 	private final View.OnClickListener listener;
-	Object payload;
-	int imageSize;
-	RecyclerView attachedRecycler;
+	private Object payload;
+	private int imageSize;
+	private RecyclerView attachedRecycler;
 
 	public ImageAdapter(Context context, View.OnClickListener listener) {
 		this.context = context;
@@ -120,18 +120,18 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 	}
 
 
-	public class ViewHolder extends RecyclerView.ViewHolder {
+	class ViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.image) SimpleDraweeView image;
 		@BindView(R.id.progress_bar) ProgressBar progressBar;
 		@BindView(R.id.upload_indicator) View uploadIndicator;
 
-		public ViewHolder(View view) {
+		ViewHolder(View view) {
 			super(view);
 			ButterKnife.bind(this, view);
 		}
 	}
 
-	public int getColorForStatus(Status status) {
+	private int getColorForStatus(Status status) {
 		switch (status.statusType) {
 			case Status.FAILED:
 				return Color.RED;
@@ -147,7 +147,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 		}
 	}
 
-	public static float convertDpToPixel(float dp, Context context){
+	private static float convertDpToPixel(float dp, Context context) {
 		Resources resources = context.getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
