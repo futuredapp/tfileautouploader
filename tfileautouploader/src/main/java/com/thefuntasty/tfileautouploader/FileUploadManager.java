@@ -8,8 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.thefuntasty.tfileautouploader.request.AddItemToUploadRequest;
+import com.thefuntasty.tfileautouploader.request.AddItemsRequest;
+import com.thefuntasty.tfileautouploader.request.AddUploadedItemRequest;
+import com.thefuntasty.tfileautouploader.request.AddableItem;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class FileUploadManager<T> implements ManagerViewContract<T> {
 	private static final String TAG = FileUploadManager.class.getSimpleName();
@@ -32,32 +36,37 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		images = new ArrayList<>();
 	}
 
-	@Override public void addAll(List<FileHolder<T>> newImages) {
-		// Remove duplicate values
-		ArrayList<FileHolder<T>> distinctImages = new ArrayList<>();
-		for (FileHolder<T> newImage : newImages) {
-			if (!this.images.contains(newImage)) {
-				distinctImages.add(newImage);
-			} else {
-				Log.w(TAG, "Does not support duplicate images!");
-			}
-		}
-
-		this.images.addAll(distinctImages);
-		this.adapterContract.itemsAdded(distinctImages);
-
-		for (FileHolder<T> image : distinctImages) {
-			if (image.status.statusType == Status.UPLOADED) {
-				continue;
-			}
-
-			Intent intent = getServiceIntent(image);
-			context.startService(intent);
-		}
-	}
-
 	public void setAdapterContract(AdapterContract<T> adapterContract) {
 		this.adapterContract = adapterContract;
+	}
+
+	@Override public void addItem(AddUploadedItemRequest request) {
+		if (itemAlreadyAdded(request.getUri())) return;
+
+		FileHolder<T> holder = new FileHolder<>(request.getUri(), Status.create(Status.UPLOADED));
+		this.images.add(holder);
+		this.adapterContract.itemAdded(holder);
+	}
+
+	@Override public void addItem(AddItemToUploadRequest request) {
+		if (itemAlreadyAdded(request.getUri())) return;
+
+		FileHolder<T> holder = new FileHolder<>(request.getUri(), Status.create(Status.WAITING), null, request.getConfig());
+		this.images.add(holder);
+		this.adapterContract.itemAdded(holder);
+
+		Intent intent = getServiceIntent(holder);
+		context.startService(intent);
+	}
+
+	@Override public void addItems(AddItemsRequest request) {
+		for (AddableItem item : request.getItems()) {
+			if (item instanceof AddItemToUploadRequest) {
+				addItem((AddItemToUploadRequest) item);
+			} else if (item instanceof AddUploadedItemRequest) {
+				addItem((AddUploadedItemRequest) item);
+			}
+		}
 	}
 
 	@Override public void removeItem(final FileHolder<T> image) {
@@ -190,6 +199,16 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 			Log.w(TAG, "Try to getItem() at invalid position: " + position + ", content size: " + images.size());
 			return null;
 		}
+	}
+
+	private boolean itemAlreadyAdded(Uri uri) {
+		for (FileHolder<T> image : images) {
+			if (image.getPath().equals(uri)) {
+				Log.w(TAG, "Does not support duplicate images!");
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private Intent getServiceIntent(FileHolder<T> image) {

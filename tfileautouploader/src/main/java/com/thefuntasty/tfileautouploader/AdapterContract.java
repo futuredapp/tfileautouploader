@@ -10,4 +10,6 @@ public interface AdapterContract<T> {
 	@UiThread void itemStatusUpdate(FileHolder<T> file);
 
 	@UiThread void itemsAdded(List<FileHolder<T>> files);
+
+	@UiThread void itemAdded(FileHolder<T> file);
 }

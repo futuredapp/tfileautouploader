@@ -16,9 +16,9 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import com.thefuntasty.tfileautouploader.FileHolder;
 import com.thefuntasty.tfileautouploader.FileUploadManager;
 import com.thefuntasty.tfileautouploader.OnUploadFinishedListener;
-import com.thefuntasty.tfileautouploader.Status;
+import com.thefuntasty.tfileautouploader.request.AddItemToUploadRequest;
+import com.thefuntasty.tfileautouploader.request.AddItemsRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -84,15 +84,13 @@ public class MainActivity extends AppCompatActivity {
 				&& null != data) {
 			List<Uri> imagesEncodedList = TIntent.getUrisFromLibrary(this, data);
 
-			ArrayList<FileHolder<Photo>> fileHolders = new ArrayList<>();
+			AddItemsRequest request = new AddItemsRequest();
 			if (imagesEncodedList != null && !imagesEncodedList.isEmpty()) {
 				for (Uri uri : imagesEncodedList) {
-					fileHolders.add(new FileHolder<Photo>(uri, new Status()));
+					request.add(new AddItemToUploadRequest(uri));
 				}
 
-				if (fileHolders.size() != 0) {
-					MyUploadManager.get().addAll(fileHolders);
-				}
+				MyUploadManager.get().addItems(request);
 			} else {
 				Toast.makeText(this, "No images recognized", Toast.LENGTH_LONG).show();
 			}

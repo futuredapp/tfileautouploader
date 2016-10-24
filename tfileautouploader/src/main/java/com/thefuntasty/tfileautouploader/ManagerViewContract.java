@@ -2,11 +2,17 @@ package com.thefuntasty.tfileautouploader;
 
 import android.support.annotation.Nullable;
 
-import java.util.List;
+import com.thefuntasty.tfileautouploader.request.AddItemToUploadRequest;
+import com.thefuntasty.tfileautouploader.request.AddItemsRequest;
+import com.thefuntasty.tfileautouploader.request.AddUploadedItemRequest;
 
 interface ManagerViewContract<T> extends BaseManagerContract<T> {
 
-	void addAll(List<FileHolder<T>> files);
+	void addItem(AddUploadedItemRequest request);
+
+	void addItem(AddItemToUploadRequest request);
+
+	void addItems(AddItemsRequest requests);
 
 	void removeItem(FileHolder<T> file);
 

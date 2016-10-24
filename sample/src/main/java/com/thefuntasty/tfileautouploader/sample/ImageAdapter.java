@@ -128,6 +128,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 		notifyItemRangeInserted(startPosition, images.size());
 	}
 
+	@Override
+	@UiThread
+	public void itemAdded(FileHolder<Photo> file) {
+		this.images.add(file);
+		notifyItemInserted(images.size() - 1);
+	}
+
 
 	class ViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.image) SimpleDraweeView image;
