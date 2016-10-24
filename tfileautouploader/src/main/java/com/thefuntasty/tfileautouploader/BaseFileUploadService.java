@@ -51,6 +51,7 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 		FileHolder<T> file = getUploadManager().getItem(path);
 
 		if (file != null) { // file not removed
+			file.status.statusType = Status.UPLOADING;
 			uploadFileAndSave(file, config);
 		} else {
 			decreaseFileCount();
@@ -65,8 +66,16 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 
 	public abstract FileUploadManager<T> getUploadManager();
 
-	public final void updateItem(FileHolder<T> file, @ItemUpdate.UpdateType int updateType) {
-		getUploadManager().updateItem(file, updateType);
+	public final void updateItemProgress(FileHolder<T> file, int progress) {
+		getUploadManager().updateItemProgress(file, progress);
+	}
+
+	public final void updateItemStatus(FileHolder<T> file, @Status.UploadStatus int newStatus) {
+		getUploadManager().updateItemStatus(file, newStatus);
+	}
+
+	public final void updateItemResult(FileHolder<T> file, T result) {
+		file.result = result;
 	}
 
 	public void showNotificationProgress(int percentage) {

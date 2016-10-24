@@ -6,20 +6,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 public class FileHolder<T> {
-	@NonNull public Uri path;
-	@NonNull public Status status;
-	public T result;
-	@Nullable public Bundle config;
+	@NonNull Uri path;
+	@NonNull Status status;
+	@Nullable T result;
+	@Nullable Bundle config;
 
 	public FileHolder(@NonNull Uri path, @NonNull Status status) {
-		this(path, status, null);
+		this(path, status, null, null);
 	}
 
-	public FileHolder(@NonNull Uri path, @NonNull Status status, T result) {
+	public FileHolder(@NonNull Uri path, @NonNull Status status, @Nullable T result) {
 		this(path, status, result, null);
 	}
 
-	public FileHolder(@NonNull Uri path, @NonNull Status status, T result, @Nullable Bundle config) {
+	public FileHolder(@NonNull Uri path, @NonNull Status status, @Nullable T result, @Nullable Bundle config) {
 		this.path = path;
 		this.status = status;
 		this.result = result;
@@ -33,7 +33,22 @@ public class FileHolder<T> {
 		FileHolder<?> that = (FileHolder<?>) o;
 
 		return path.toString().equals(that.path.toString());
+	}
 
+	public @Status.UploadStatus int getStatus() {
+		return status.statusType;
+	}
+
+	public int getProgress() {
+		return status.progress;
+	}
+
+	@NonNull public Uri getPath() {
+		return path;
+	}
+
+	@Nullable private T getResult() {
+		return result;
 	}
 
 	@Override public int hashCode() {

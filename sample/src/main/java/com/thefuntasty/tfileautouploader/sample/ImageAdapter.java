@@ -20,7 +20,6 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import com.thefuntasty.tfileautouploader.AdapterContract;
 import com.thefuntasty.tfileautouploader.FileHolder;
-import com.thefuntasty.tfileautouploader.ItemUpdate;
 import com.thefuntasty.tfileautouploader.Status;
 
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
 	@Override public void onBindViewHolder(ViewHolder holder, int position) {
 		FileHolder<Photo> fileHolder = images.get(position);
-		ImageRequest request = ImageRequestBuilder.newBuilderWithSource(fileHolder.path)
+		ImageRequest request = ImageRequestBuilder.newBuilderWithSource(fileHolder.getPath())
 				.setResizeOptions(new ResizeOptions(imageSize, imageSize))
 				.build();
 		DraweeController controller = Fresco.newDraweeControllerBuilder()
@@ -72,8 +71,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 				.setImageRequest(request)
 				.build();
 		holder.image.setController(controller);
-		holder.uploadIndicator.setBackgroundColor(getColorForStatus(fileHolder.status));
-		holder.progressBar.setProgress(fileHolder.status.progress);
+		holder.uploadIndicator.setBackgroundColor(getColorForStatus(fileHolder.getStatus()));
+		holder.progressBar.setProgress(fileHolder.getProgress());
 
 		holder.itemView.setOnClickListener(listener);
 	}
@@ -89,31 +88,41 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 		}
 
 		FileHolder<Photo> fileHolder = images.get(position);
-		holder.uploadIndicator.setBackgroundColor(getColorForStatus(fileHolder.status));
-		holder.progressBar.setProgress(fileHolder.status.progress);
+		holder.uploadIndicator.setBackgroundColor(getColorForStatus(fileHolder.getStatus()));
+		holder.progressBar.setProgress(fileHolder.getProgress());
 	}
 
 	@Override public int getItemCount() {
 		return images.size();
 	}
 
-	@Override
-	@UiThread
-	public void updateItem(FileHolder<Photo> image, @ItemUpdate.UpdateType int updateType) {
+	private void refreshItem(FileHolder<Photo> image) {
 		int index = images.indexOf(image);
 		images.set(index, image);
 		notifyItemChanged(index, payload);
 	}
 
-	@Override public void removeItem(FileHolder<Photo> image) {
+	private void removeItem(FileHolder<Photo> image) {
 		int index = images.indexOf(image);
 		images.remove(index);
 		notifyItemRemoved(index);
 	}
 
+	@Override public void itemUploadProgressUpdate(FileHolder<Photo> file) {
+		refreshItem(file);
+	}
+
+	@Override public void itemStatusUpdate(FileHolder<Photo> file) {
+		if (file.getStatus() == Status.REMOVED) {
+			removeItem(file);
+		} else {
+			refreshItem(file);
+		}
+	}
+
 	@Override
 	@UiThread
-	public void addAll(List<FileHolder<Photo>> images) {
+	public void itemsAdded(List<FileHolder<Photo>> images) {
 		int startPosition = this.images.size();
 		this.images.addAll(images);
 		notifyItemRangeInserted(startPosition, images.size());
@@ -131,8 +140,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 		}
 	}
 
-	private int getColorForStatus(Status status) {
-		switch (status.statusType) {
+	private int getColorForStatus(@Status.UploadStatus int statusType) {
+		switch (statusType) {
 			case Status.FAILED:
 				return Color.RED;
 			default:

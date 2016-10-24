@@ -10,7 +10,6 @@ import android.support.v4.app.NotificationCompat;
 import com.thefuntasty.tfileautouploader.BaseFileUploadService;
 import com.thefuntasty.tfileautouploader.FileHolder;
 import com.thefuntasty.tfileautouploader.FileUploadManager;
-import com.thefuntasty.tfileautouploader.ItemUpdate;
 import com.thefuntasty.tfileautouploader.Status;
 
 import java.util.concurrent.TimeUnit;
@@ -47,8 +46,6 @@ public class MyUploadService extends BaseFileUploadService<Photo> {
 	}
 
 	@Override protected void uploadFileAndSave(@NonNull final FileHolder<Photo> image, Bundle config) {
-		image.status.statusType = Status.UPLOADING;
-
 		Observable.interval(50, TimeUnit.MILLISECONDS)
 				.take(101)
 				.filter(new Func1<Long, Boolean>() {
@@ -61,9 +58,8 @@ public class MyUploadService extends BaseFileUploadService<Photo> {
 					@Override public void onCompleted() { }
 					@Override public void onError(Throwable e) { }
 					@Override public void onNext(Long aLong) {
-						if (image.status.statusType != Status.REMOVED) {
-							image.status.progress = aLong.intValue();
-							updateItem(image, ItemUpdate.PROGRESS);
+						if (image.getStatus() != Status.REMOVED) {
+							updateItemProgress(image, aLong.intValue());
 							showNotificationProgress(aLong.intValue());
 						} else {
 							unsubscribe();
@@ -77,9 +73,8 @@ public class MyUploadService extends BaseFileUploadService<Photo> {
 					@Override public void onCompleted() { }
 					@Override public void onError(Throwable e) { }
 					@Override public void onNext(String s) {
-						if (image.status.statusType != Status.REMOVED) {
-							image.status.statusType = Status.UPLOADED;
-							updateItem(image, ItemUpdate.STATUS);
+						if (image.getStatus() != Status.REMOVED) {
+							updateItemStatus(image, Status.UPLOADED);
 						} else {
 							unsubscribe();
 						}

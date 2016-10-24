@@ -44,7 +44,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		}
 
 		this.images.addAll(distinctImages);
-		this.adapterContract.addAll(distinctImages);
+		this.adapterContract.itemsAdded(distinctImages);
 
 		for (FileHolder<T> image : distinctImages) {
 			if (image.status.statusType == Status.UPLOADED) {
@@ -67,7 +67,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 
 				handler.post(new Runnable() {
 					@Override public void run() {
-						adapterContract.removeItem(image);
+						adapterContract.itemStatusUpdate(image);
 					}
 				});
 				images.remove(img);
@@ -90,7 +90,7 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 
 				handler.post(new Runnable() {
 					@Override public void run() {
-						adapterContract.updateItem(image, ItemUpdate.STATUS);
+						adapterContract.itemStatusUpdate(image);
 					}
 				});
 
@@ -124,18 +124,38 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 		images.clear();
 	}
 
-	@Override public void updateItem(final FileHolder<T> image, @ItemUpdate.UpdateType final int updateType) {
-		int indexOf = images.indexOf(image);
+	void updateItemProgress(final FileHolder<T> file, int value) {
+		int indexOf = images.indexOf(file);
 
 		if (indexOf != -1) {
 			FileHolder<T> fileHolder = images.get(indexOf);
-			fileHolder.status = image.status;
-			fileHolder.path = image.path;
-			fileHolder.result = image.result;
+			fileHolder.status = file.status;
+			fileHolder.status.progress = value;
+			fileHolder.path = file.path;
+			fileHolder.result = file.result;
 
 			handler.post(new Runnable() {
 				@Override public void run() {
-					adapterContract.updateItem(image, updateType);
+					adapterContract.itemUploadProgressUpdate(file);
+				}
+			});
+		} else {
+			Log.w(TAG, "Attempts to update non-existing item!");
+		}
+	}
+
+	void updateItemStatus(final FileHolder<T> file, @Status.UploadStatus int newStatus) {
+		int indexOf = images.indexOf(file);
+
+		if (indexOf != -1) {
+			FileHolder<T> fileHolder = images.get(indexOf);
+			fileHolder.status.statusType = newStatus;
+			fileHolder.path = file.path;
+			fileHolder.result = file.result;
+
+			handler.post(new Runnable() {
+				@Override public void run() {
+					adapterContract.itemUploadProgressUpdate(file);
 				}
 			});
 
