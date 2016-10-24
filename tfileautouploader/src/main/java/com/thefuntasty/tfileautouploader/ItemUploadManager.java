@@ -133,19 +133,19 @@ public class ItemUploadManager<T> implements ManagerViewContract<T> {
 		images.clear();
 	}
 
-	void updateItemProgress(final ItemHolder<T> file, int value) {
-		int indexOf = images.indexOf(file);
+	void updateItemProgress(final ItemHolder<T> item, int value) {
+		int indexOf = images.indexOf(item);
 
 		if (indexOf != -1) {
 			ItemHolder<T> itemHolder = images.get(indexOf);
-			itemHolder.status = file.status;
+			itemHolder.status = item.status;
 			itemHolder.status.progress = value;
-			itemHolder.path = file.path;
-			itemHolder.result = file.result;
+			itemHolder.path = item.path;
+			itemHolder.result = item.result;
 
 			handler.post(new Runnable() {
 				@Override public void run() {
-					adapterContract.itemUploadProgressUpdate(file);
+					adapterContract.itemUploadProgressUpdate(item);
 				}
 			});
 		} else {
@@ -153,18 +153,18 @@ public class ItemUploadManager<T> implements ManagerViewContract<T> {
 		}
 	}
 
-	void updateItemStatus(final ItemHolder<T> file, @Status.UploadStatus int newStatus) {
-		int indexOf = images.indexOf(file);
+	void updateItemStatus(final ItemHolder<T> item, @Status.UploadStatus int newStatus) {
+		int indexOf = images.indexOf(item);
 
 		if (indexOf != -1) {
 			ItemHolder<T> itemHolder = images.get(indexOf);
 			itemHolder.status.statusType = newStatus;
-			itemHolder.path = file.path;
-			itemHolder.result = file.result;
+			itemHolder.path = item.path;
+			itemHolder.result = item.result;
 
 			handler.post(new Runnable() {
 				@Override public void run() {
-					adapterContract.itemUploadProgressUpdate(file);
+					adapterContract.itemUploadProgressUpdate(item);
 				}
 			});
 

@@ -108,30 +108,30 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 		notifyItemRemoved(index);
 	}
 
-	@Override public void itemUploadProgressUpdate(ItemHolder<Photo> file) {
-		refreshItem(file);
+	@Override public void itemUploadProgressUpdate(ItemHolder<Photo> item) {
+		refreshItem(item);
 	}
 
-	@Override public void itemStatusUpdate(ItemHolder<Photo> file) {
-		if (file.getStatus() == Status.REMOVED) {
-			removeItem(file);
+	@Override public void itemStatusUpdate(ItemHolder<Photo> item) {
+		if (item.getStatus() == Status.REMOVED) {
+			removeItem(item);
 		} else {
-			refreshItem(file);
+			refreshItem(item);
 		}
 	}
 
 	@Override
 	@UiThread
-	public void itemsAdded(List<ItemHolder<Photo>> images) {
+	public void itemsAdded(List<ItemHolder<Photo>> items) {
 		int startPosition = this.images.size();
-		this.images.addAll(images);
-		notifyItemRangeInserted(startPosition, images.size());
+		this.images.addAll(items);
+		notifyItemRangeInserted(startPosition, items.size());
 	}
 
 	@Override
 	@UiThread
-	public void itemAdded(ItemHolder<Photo> file) {
-		this.images.add(file);
+	public void itemAdded(ItemHolder<Photo> item) {
+		this.images.add(item);
 		notifyItemInserted(images.size() - 1);
 	}
 

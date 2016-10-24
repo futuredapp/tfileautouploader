@@ -37,15 +37,15 @@ public class MyUploadService extends BaseItemUploadService<Photo> {
 				.setSmallIcon(R.drawable.ic_dollar_1_normal);
 	}
 
-	@Override public void updateNotification(NotificationCompat.Builder builder, int photoCount, int currentPhoto) {
-		builder.setContentText("Uploading photos: " + currentPhoto + "/" + photoCount);
+	@Override public void updateNotification(NotificationCompat.Builder builder, int itemCount, int currentItem) {
+		builder.setContentText("Uploading photos: " + currentItem + "/" + itemCount);
 	}
 
 	@Override public ItemUploadManager<Photo> getUploadManager() {
 		return MyUploadManager.get();
 	}
 
-	@Override protected void uploadFileAndSave(@NonNull final ItemHolder<Photo> image, Bundle config) {
+	@Override protected void uploadItemAndSave(@NonNull final ItemHolder<Photo> item, Bundle config) {
 		Observable.interval(50, TimeUnit.MILLISECONDS)
 				.take(101)
 				.filter(new Func1<Long, Boolean>() {
@@ -58,8 +58,8 @@ public class MyUploadService extends BaseItemUploadService<Photo> {
 					@Override public void onCompleted() { }
 					@Override public void onError(Throwable e) { }
 					@Override public void onNext(Long aLong) {
-						if (image.getStatus() != Status.REMOVED) {
-							updateItemProgress(image, aLong.intValue());
+						if (item.getStatus() != Status.REMOVED) {
+							updateItemProgress(item, aLong.intValue());
 							showNotificationProgress(aLong.intValue());
 						} else {
 							unsubscribe();
@@ -73,8 +73,8 @@ public class MyUploadService extends BaseItemUploadService<Photo> {
 					@Override public void onCompleted() { }
 					@Override public void onError(Throwable e) { }
 					@Override public void onNext(String s) {
-						if (image.getStatus() != Status.REMOVED) {
-							updateItemStatus(image, Status.UPLOADED);
+						if (item.getStatus() != Status.REMOVED) {
+							updateItemStatus(item, Status.UPLOADED);
 						} else {
 							unsubscribe();
 						}

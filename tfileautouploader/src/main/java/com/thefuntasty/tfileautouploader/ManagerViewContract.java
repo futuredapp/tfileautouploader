@@ -14,9 +14,9 @@ interface ManagerViewContract<T> extends BaseManagerContract<T> {
 
 	void addItems(AddItemsRequest requests);
 
-	void removeItem(ItemHolder<T> file);
+	void removeItem(ItemHolder<T> item);
 
-	void retryItem(ItemHolder<T> file);
+	void retryItem(ItemHolder<T> item);
 
 	boolean isEverythingUploaded();
 
