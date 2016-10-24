@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import com.thefuntasty.tfileautouploader.FileUploadManager;
 import com.thefuntasty.tfileautouploader.ItemHolder;
+import com.thefuntasty.tfileautouploader.ItemUploadManager;
 import com.thefuntasty.tfileautouploader.OnUploadFinishedListener;
 import com.thefuntasty.tfileautouploader.request.AddItemToUploadRequest;
 import com.thefuntasty.tfileautouploader.request.AddItemsRequest;
@@ -28,7 +28,7 @@ import rx.functions.Action1;
 public class MainActivity extends AppCompatActivity {
 
 	private final int PICK_IMAGE_MULTIPLE = 1;
-	private FileUploadManager<Photo> uploadManager;
+	private ItemUploadManager<Photo> uploadManager;
 	private RecyclerView recycler;
 
 	@Override

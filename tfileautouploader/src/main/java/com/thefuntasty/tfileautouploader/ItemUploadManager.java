@@ -15,20 +15,20 @@ import com.thefuntasty.tfileautouploader.request.AddableItem;
 
 import java.util.ArrayList;
 
-public class FileUploadManager<T> implements ManagerViewContract<T> {
-	private static final String TAG = FileUploadManager.class.getSimpleName();
+public class ItemUploadManager<T> implements ManagerViewContract<T> {
+	private static final String TAG = ItemUploadManager.class.getSimpleName();
 
 	private ArrayList<ItemHolder<T>> images;
 	private OnUploadFinishedListener onUploadFinishedListener;
 	private Context context;
 	private AdapterContract<T> adapterContract;
 	private Handler handler;
-	private Class<? extends BaseFileUploadService> serviceClass;
+	private Class<? extends BaseItemUploadService> serviceClass;
 
 	/**
 	 * Create singleton instance of this with preferred type
 	 */
-	public FileUploadManager(@NonNull Context context, Class<? extends BaseFileUploadService> serviceClass) {
+	public ItemUploadManager(@NonNull Context context, Class<? extends BaseItemUploadService> serviceClass) {
 		this.context = context.getApplicationContext();
 		this.handler = new Handler(context.getMainLooper());
 		this.serviceClass = serviceClass;
@@ -212,6 +212,6 @@ public class FileUploadManager<T> implements ManagerViewContract<T> {
 	}
 
 	private Intent getServiceIntent(ItemHolder<T> image) {
-		return BaseFileUploadService.getStarterIntent(context, image, serviceClass);
+		return BaseItemUploadService.getStarterIntent(context, image, serviceClass);
 	}
 }

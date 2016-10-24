@@ -1,14 +1,14 @@
 package com.thefuntasty.tfileautouploader.sample;
 
-import com.thefuntasty.tfileautouploader.FileUploadManager;
+import com.thefuntasty.tfileautouploader.ItemUploadManager;
 
 public class MyUploadManager {
 
-	private static FileUploadManager<Photo> manager;
+	private static ItemUploadManager<Photo> manager;
 
-	public static FileUploadManager<Photo> get() {
+	public static ItemUploadManager<Photo> get() {
 		if (manager == null) {
-			manager = new FileUploadManager<>(App.context(), MyUploadService.class);
+			manager = new ItemUploadManager<>(App.context(), MyUploadService.class);
 		}
 
 		return manager;

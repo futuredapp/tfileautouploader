@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
-import com.thefuntasty.tfileautouploader.BaseFileUploadService;
-import com.thefuntasty.tfileautouploader.FileUploadManager;
+import com.thefuntasty.tfileautouploader.BaseItemUploadService;
 import com.thefuntasty.tfileautouploader.ItemHolder;
+import com.thefuntasty.tfileautouploader.ItemUploadManager;
 import com.thefuntasty.tfileautouploader.Status;
 
 import java.util.concurrent.TimeUnit;
@@ -18,7 +18,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class MyUploadService extends BaseFileUploadService<Photo> {
+public class MyUploadService extends BaseItemUploadService<Photo> {
 
 	public MyUploadService() {
 		super("MyUploadService");
@@ -41,7 +41,7 @@ public class MyUploadService extends BaseFileUploadService<Photo> {
 		builder.setContentText("Uploading photos: " + currentPhoto + "/" + photoCount);
 	}
 
-	@Override public FileUploadManager<Photo> getUploadManager() {
+	@Override public ItemUploadManager<Photo> getUploadManager() {
 		return MyUploadManager.get();
 	}
 

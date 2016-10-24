@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
-public abstract class BaseFileUploadService<T> extends IntentService {
+public abstract class BaseItemUploadService<T> extends IntentService {
 
 	private NotificationManager manager;
 	private static final int NOTIFICATION_ID = 1111;
@@ -18,7 +18,7 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 	private int currentFile = 0;
 	private NotificationCompat.Builder notificationBuilder;
 
-	public BaseFileUploadService(String name) {
+	public BaseItemUploadService(String name) {
 		super(name);
 	}
 
@@ -64,7 +64,7 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 
 	public abstract void updateNotification(NotificationCompat.Builder builder, int fileCount, int currentFile);
 
-	public abstract FileUploadManager<T> getUploadManager();
+	public abstract ItemUploadManager<T> getUploadManager();
 
 	public final void updateItemProgress(ItemHolder<T> file, int progress) {
 		getUploadManager().updateItemProgress(file, progress);
@@ -88,7 +88,7 @@ public abstract class BaseFileUploadService<T> extends IntentService {
 		currentFile--;
 	}
 
-	public static Intent getStarterIntent(Context context, ItemHolder<?> image, Class<? extends BaseFileUploadService> serviceClass) {
+	public static Intent getStarterIntent(Context context, ItemHolder<?> image, Class<? extends BaseItemUploadService> serviceClass) {
 		Intent intent = new Intent(context, serviceClass);
 		intent.putExtra("uri", image.path);
 		intent.putExtra("config", image.config);
