@@ -11,7 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileUploadManager<T> implements ManagerServiceContract<T>, ManagerViewContract<T> {
+public class FileUploadManager<T> implements ManagerViewContract<T> {
 	private static final String TAG = FileUploadManager.class.getSimpleName();
 
 	private ArrayList<FileHolder<T>> images;
