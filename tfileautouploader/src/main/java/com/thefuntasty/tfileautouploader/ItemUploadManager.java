@@ -164,7 +164,7 @@ public class ItemUploadManager<T> implements ManagerViewContract<T> {
 
 			handler.post(new Runnable() {
 				@Override public void run() {
-					adapterContract.itemUploadProgressUpdate(item);
+					adapterContract.itemStatusUpdate(item);
 				}
 			});
 
