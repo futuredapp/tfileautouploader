@@ -45,7 +45,6 @@ public abstract class BaseItemUploadService<T> extends IntentService {
 
 		startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
-		notificationBuilder.setProgress(100, 0, false);
 		manager.notify(NOTIFICATION_ID, notificationBuilder.build());
 
 		ItemHolder<T> item = getUploadManager().getItem(path);
